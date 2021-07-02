@@ -3,6 +3,11 @@ dist
 
 # ------------- Defaults ------------- #
 
+# IDEs
+*.iml
+.idea
+.vscode
+
 # Logs
 logs
 *.log

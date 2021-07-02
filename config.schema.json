@@ -1,15 +1,22 @@
 {
-  "pluginAlias": "ExampleHomebridgePlugin",
+  "pluginAlias": "MitsubishiAUNZ",
   "pluginType": "platform",
   "singular": true,
+  "headerDisplay": "Enter your Mitsubishi **Wi-Fi Control** app credentials to discover your units.",
   "schema": {
     "type": "object",
     "properties": {
       "name": {
-        "title": "Name",
+        "title": "User Name",
         "type": "string",
         "required": true,
-        "default": "Example Dynamic Platform"
+        "description": "Your user id, e.g. username@domain.com"
+      },
+      "password": {
+        "title": "User Password",
+        "type": "string",
+        "required": true,
+        "description": "Password used on your Mitsubishi Wi-Fi Control app"
       }
     }
   }

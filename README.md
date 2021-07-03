@@ -26,6 +26,10 @@ Also note that the [Homebridge](https://homebridge.io/) put together excellent d
 documentation which made it possible to get up and running quickly (e.g. 
 [plugin-temeplate](https://github.com/homebridge/homebridge-plugin-template))!
 
+## Known Issues
+This plugin relies on Melview cloud service which is notably slow to respond (sometimes up to 60s). 
+This plugin will, for now, suffer of the same issues Alexa and Google Home integrations suffers (in Australia and NZ). If you send a command through HomeKit (via this plugin) or Alexa or Google, it might take up to 60s for the unit to respond.
+
 ## Installation
 
 ### Through Homebridge Config UI (recommeded)

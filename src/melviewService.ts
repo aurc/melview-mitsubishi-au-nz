@@ -122,9 +122,9 @@ export class MelviewService {
       const body = await this.debugResponse('command', response);
       const rBody = JSON.parse(body) as CommandResponse;
       if (rBody.error === 'ok' && rBody.lc && rBody.lc.length > 0) {
-        const xmlBody = command.getLocalCommandBody(rBody.lc)
-        this.log.error(command.getLocalCommandURL())
-        this.log.error(xmlBody)
+        const xmlBody = command.getLocalCommandBody(rBody.lc);
+        this.log.error(command.getLocalCommandURL());
+        this.log.error(xmlBody);
         fetch(command.getLocalCommandURL(), {
           method: 'POST',
           body: xmlBody,

@@ -26,7 +26,14 @@
   "keywords": [
     "homebridge-plugin"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "@types/node-fetch": "^2.5.10",
+    "@types/tough-cookie": "^4.0.0",
+    "fs": "0.0.1-security",
+    "node-fetch": "^2.6.1",
+    "path": "^0.12.7",
+    "tough-cookie": "^4.0.0"
+  },
   "devDependencies": {
     "@types/node": "^14.14.31",
     "@typescript-eslint/eslint-plugin": "^4.16.1",

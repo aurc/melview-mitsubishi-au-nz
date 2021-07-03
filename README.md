@@ -1,7 +1,7 @@
 
 <p align="center">
 
-<img src="https://github.com/aurc/branding/raw/master/logos/homebridge-wordmark-logo-vertical.png" width="150">
+<img src="https://github.com/aurc/melview-mitsubishi-au-nz/raw/master/assets/Logo.png">
 
 </p>
 

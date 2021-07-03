@@ -166,11 +166,21 @@ export class MelviewMitsubishiPlatformAccessory {
     }
 
     async getRotationSpeed(): Promise<CharacteristicValue> {
-      const fanSpeed = this.getDevice().state!.setfan;
-      if (fanSpeed > 0) {
-        return fanSpeed * 20;
+      const fan = this.getDevice().state!.setfan;
+      switch(fan) {
+        case 1:
+          return 20;
+        case 2:
+          return 40;
+        case 3:
+          return 60;
+        case 5:
+          return 80;
+        case 6:
+          return 100;
+        default:
+          return 0;
       }
-      return 0;
     }
 
     async setCoolingThresholdTemperature(value: CharacteristicValue) {

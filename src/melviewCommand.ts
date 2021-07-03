@@ -10,8 +10,8 @@ export interface Command {
 
 export abstract class AbstractCommand implements Command {
   public constructor(protected value: CharacteristicValue,
-                     protected device: Unit,
-                     protected platform: MelviewMitsubishiHomebridgePlatform) {
+                       protected device: Unit,
+                       protected platform: MelviewMitsubishiHomebridgePlatform) {
   }
 
     abstract execute(): string;
@@ -47,24 +47,26 @@ export class CommandTargetHeaterCoolerState extends AbstractCommand {
 
 export class CommandRotationSpeed extends AbstractCommand {
   public execute(): string {
-    if (this.value <= 20) {
+    if (this.value === 0) {
+            this.device.state!.setfan = 0;
+    } else if (this.value <= 20) {
             this.device.state!.setfan = 1;
     } else if (this.value <= 40) {
             this.device.state!.setfan = 2;
     } else if (this.value <= 60) {
             this.device.state!.setfan = 3;
     } else if (this.value <= 80) {
-            this.device.state!.setfan = 4;
-    } else {
             this.device.state!.setfan = 5;
+    } else {
+            this.device.state!.setfan = 6;
     }
-    return 'FS'+this.device.state!.setfan;
+    return 'FS' + this.device.state!.setfan;
   }
 }
 
 export class CommandTemperature extends AbstractCommand {
   public execute(): string {
         this.device.state!.settemp = this.value as string;
-        return 'TS'+this.device.state!.setfan;
+        return 'TS' + this.device.state!.setfan;
   }
 }

@@ -2,7 +2,7 @@
   "private": true,
   "displayName": "AU/NZ Mitsubishi Air-Conditioners Bridge",
   "name": "homebridge-melview-mitsubishi-au-nz",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Control your Mitsubishi Aircon units with Homebridge and Apple HomeKit",
   "license": "Apache-2.0",
   "repository": {

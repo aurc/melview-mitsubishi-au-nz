@@ -70,4 +70,7 @@ and configuring the plugin file `config.json` as:
 where **user** is your user name, typically the email you used to register with the app 
 and **password** is your account password.
 
+## Questions & Issues
+If you have issues, found a bug or have a question, please open an issue **[here](https://github.com/aurc/melview-mitsubishi-au-nz/issues)**.
+
 

@@ -47,14 +47,14 @@ and configuring the plugin file `config.json` as:
     "accessories": [],
     "platforms": [
         {
-            "name": "user@domain.com",
+            "user": "user@domain.com",
             "password": "yourpassword",
             "platform": "MitsubishiAUNZ"
         }
     ]
 }
 ````
-where **name** is your user name, typically the email you used to register with the app 
+where **user** is your user name, typically the email you used to register with the app 
 and **password** is your account password.
 
 

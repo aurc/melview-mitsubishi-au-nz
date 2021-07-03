@@ -33,7 +33,7 @@ export class MelviewService {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
         body: JSON.stringify({
-          user: this.config.name,
+          user: this.config.user,
           pass: this.config.password,
           appversion: APP_VERSION,
         }),

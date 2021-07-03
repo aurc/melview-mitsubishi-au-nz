@@ -31,7 +31,7 @@ export class MelviewMitsubishiHomebridgePlatform implements DynamicPlatformPlugi
     ) {
       this.log.debug('Finished initializing platform');
 
-      if (!this.config.name || !this.config.password) {
+      if (!this.config.user || !this.config.password) {
         this.log.error('Plugin has not been configured. Please enter Melview user credentials.');
         return;
       }

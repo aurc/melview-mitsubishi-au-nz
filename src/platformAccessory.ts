@@ -57,6 +57,10 @@ export class MelviewMitsubishiPlatformAccessory {
           .onSet(this.setHeatingThresholdTemperature.bind(this))
           .onGet(this.getHeatingThresholdTemperature.bind(this));
 
+        this.service.getCharacteristic(this.platform.Characteristic.CurrentTemperature).props.minValue=-50;
+        this.service.getCharacteristic(this.platform.Characteristic.CurrentTemperature).props.maxValue=70;
+        this.service.getCharacteristic(this.platform.Characteristic.CurrentTemperature).props.minStep=0.5;
+
         const c = this.platform.api.hap.Characteristic;
         const cool = this.getDevice().state!.max![WorkMode.COOL + ''];
         const heat = this.getDevice().state!.max![WorkMode.HEAT + ''];

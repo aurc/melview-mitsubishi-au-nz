@@ -6,7 +6,7 @@
   "schema": {
     "type": "object",
     "properties": {
-      "name": {
+      "user": {
         "title": "User Name",
         "type": "string",
         "required": true,

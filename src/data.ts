@@ -109,3 +109,21 @@ export interface Range {
     min: number;
     max: number;
 }
+
+export interface CommandResponse {
+    id: string;
+    lc: string;
+    power: number;
+    standby: number;
+    setmode: number;
+    automode: number;
+    setfan: number;
+    settemp: string;
+    roomtemp: string;
+    outdoortemp: string;
+    airdir: number;
+    airdirh: number;
+    sendcount: number;
+    fault: string;
+    error: string;
+}

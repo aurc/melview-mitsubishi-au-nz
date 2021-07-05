@@ -123,8 +123,6 @@ export class MelviewService {
       const rBody = JSON.parse(body) as CommandResponse;
       if (rBody.error === 'ok' && rBody.lc && rBody.lc.length > 0) {
         const xmlBody = command.getLocalCommandBody(rBody.lc);
-        this.log.error(command.getLocalCommandURL());
-        this.log.error(xmlBody);
         fetch(command.getLocalCommandURL(), {
           method: 'POST',
           body: xmlBody,
@@ -133,7 +131,7 @@ export class MelviewService {
             this.log.debug('Successfully processed local request:', v);
           }).finally();
         }).catch(e => {
-          this.log.warn('Unable to access unit in LAN.', e);
+          this.log.warn('Unable to access unit via direct LAN interface.', e);
         }).finally();
       }
     }

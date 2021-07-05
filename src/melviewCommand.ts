@@ -10,8 +10,6 @@ export interface Command {
     getLocalCommandURL(): string;
 
     getLocalCommandBody(key: string): string;
-
-    getLocalCommand(): string;
 }
 
 export abstract class AbstractCommand implements Command {
@@ -34,22 +32,12 @@ export abstract class AbstractCommand implements Command {
       return '<?xml version="1.0" encoding="UTF-8"?>\n' +
             '<ESV>' + key + '</ESV>';
     }
-
-    abstract getLocalCommand(): string;
 }
 
 export class CommandPower extends AbstractCommand {
   public execute(): string {
         this.device.state!.power = this.value as number;
         return 'PW' + this.value;
-  }
-
-  public getLocalCommand(): string {
-    if (this.value === 0) {
-      return 'OFF';
-    } else {
-      return 'ON';
-    }
   }
 }
 
@@ -65,21 +53,6 @@ export class CommandTargetHeaterCoolerState extends AbstractCommand {
       case this.platform.Characteristic.TargetHeaterCoolerState.AUTO:
                 this.device.state!.setmode = WorkMode.AUTO;
         return 'MD' + WorkMode.AUTO;
-    }
-    return '';
-  }
-
-  public getLocalCommand(): string {
-    switch (this.value) {
-      case this.platform.Characteristic.TargetHeaterCoolerState.COOL:
-                this.device.state!.setmode = WorkMode.COOL;
-        return 'COOL';
-      case this.platform.Characteristic.TargetHeaterCoolerState.HEAT:
-                this.device.state!.setmode = WorkMode.HEAT;
-        return 'HEAT';
-      case this.platform.Characteristic.TargetHeaterCoolerState.AUTO:
-                this.device.state!.setmode = WorkMode.AUTO;
-        return 'AUTO';
     }
     return '';
   }
@@ -102,32 +75,11 @@ export class CommandRotationSpeed extends AbstractCommand {
     }
     return 'FS' + this.device.state!.setfan;
   }
-
-  public getLocalCommand(): string {
-    if (this.value === 0) {
-      return 'FAN0';
-    } else if (this.value <= 20) {
-      return 'FAN1';
-    } else if (this.value <= 40) {
-      return 'FAN2';
-    } else if (this.value <= 60) {
-      return 'FAN3';
-    } else if (this.value <= 80) {
-      return 'FAN4';
-    } else {
-      return 'FAN5';
-    }
-  }
 }
 
 export class CommandTemperature extends AbstractCommand {
   public execute(): string {
         this.device.state!.settemp = this.value as string;
         return 'TS' + this.device.state!.setfan;
-  }
-
-  public getLocalCommand(): string {
-    const temp = parseInt(this.value as string);
-    return 'TEMP' + temp;
   }
 }

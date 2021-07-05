@@ -1,7 +1,7 @@
 import {API, Logger, PlatformConfig} from 'homebridge';
 import fetch, {Response} from 'node-fetch';
 import {Cookie} from 'tough-cookie';
-import {Account, Building, Capabilities, State} from './data';
+import {Account, Building, Capabilities, CommandResponse, State} from './data';
 import {Command} from './melviewCommand';
 
 const URL = 'https://api.melview.net/api/';
@@ -101,7 +101,7 @@ export class MelviewService {
      * @param unitID is the unit identifier
      * @param command is the command to be executed.
      */
-    public async command(command : Command){
+    public async command(command: Command) {
       if (this.authWillExpire()) {
         this.login().catch(e => {
           this.log.error(e);
@@ -116,9 +116,24 @@ export class MelviewService {
           unitid: command.getUnitID(),
           v: 2,
           commands: command.execute(),
+          lc: 1,
         }),
       });
-      await this.debugResponse('command', response);
+      const body = await this.debugResponse('command', response);
+      const rBody = JSON.parse(body) as CommandResponse;
+      if (rBody.error === 'ok' && rBody.lc && rBody.lc.length > 0) {
+        const xmlBody = command.getLocalCommandBody(rBody.lc);
+        fetch(command.getLocalCommandURL(), {
+          method: 'POST',
+          body: xmlBody,
+        }).then(r =>{
+          r.text().then(v => {
+            this.log.debug('Successfully processed local request:', v);
+          }).finally();
+        }).catch(e => {
+          this.log.warn('Unable to access unit via direct LAN interface.', e);
+        }).finally();
+      }
     }
 
     /**

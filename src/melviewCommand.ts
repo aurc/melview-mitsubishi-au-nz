@@ -6,6 +6,10 @@ export interface Command {
     execute(): string;
 
     getUnitID(): string;
+
+    getLocalCommandURL(): string;
+
+    getLocalCommandBody(key: string): string;
 }
 
 export abstract class AbstractCommand implements Command {
@@ -18,6 +22,15 @@ export abstract class AbstractCommand implements Command {
 
     public getUnitID(): string {
       return this.device.unitid;
+    }
+
+    public getLocalCommandURL(): string {
+      return 'http://' + this.device.capabilities!.localip + '/smart';
+    }
+
+    public getLocalCommandBody(key: string): string {
+      return '<?xml version="1.0" encoding="UTF-8"?>\n' +
+            '<ESV>' + key + '</ESV>';
     }
 }
 

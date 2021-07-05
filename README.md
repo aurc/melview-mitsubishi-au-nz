@@ -21,6 +21,7 @@ Use this plugin to integrate your Mitsubishi Airconditioner appliances with Appl
 ## Overview
 
 This plugin allows you to control the basic functionalities of your AC units through the home app and Siri. The features include:
+- Instant unit response - update the unit directly via LAN interface & cloud Melview.
 - Automatically find all appliances linked to your account;
 - Control power ON/OFF
 - Set mode AUTO, HEAT, COOL
@@ -37,7 +38,8 @@ documentation which made it possible to get up and running quickly (e.g.
 
 ## Compatibility & Pre-requisites
 
-It should work with most of modern Mitsubishi Electric Airconditioner units that are Wi-Fi capable. This plugin has been developed and tested against the following products:
+It should work with most modern Mitsubishi Electric Airconditioner units that are Wi-Fi capable. 
+This plugin has been developed and tested against the following products:
 | Model                                                                                              | Wi-Fi Module                                    |
 | -------------------------------------------------------------------------------------------------- | ----------------------------------------------- | 
 | [MSZ-GL71VGD](https://www.mitsubishielectric.com.au/assets/LEG/JG79A991H01-UM.pdf)                 | [MAC-568IF-E](https://www.mitsubishielectric.com.au/assets/LEG/MAC-568IF-E.pdf)   |
@@ -48,9 +50,17 @@ In a nutshell, if you were able to install the **[Wi-Fi Control App](https://app
 
 Netheless to say, you should have **[Homebridge](https://homebridge.io/)** running.
 
-## Known Issues
-This plugin relies on Melview cloud service which is notably slow to respond (sometimes up to 60s). 
-This plugin will, for now, suffer of the same issues Alexa and Google Home integrations suffers (in Australia and NZ). If you send a command through HomeKit (via this plugin) or Alexa or Google, it might take up to 60s for the unit to respond.
+## Coming Soon
+Some capabilities are not yet available and should be released soon:
+- Dehumidifier (DRY) mode;
+- Fan (FAN) mode;
+- Swing;
+
+## Known issues
+LAN access still requires internet connection, as it authenticates the requests with Melview cloud. It still
+operates way faster than Alexa and Goolge home integration as it has a fast follower command locally removing
+the know lag.
+
 
 ## Installation
 

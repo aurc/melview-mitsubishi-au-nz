@@ -32,9 +32,7 @@ export abstract class AbstractCommand implements Command {
 
     public getLocalCommandBody(key: string): string {
       return '<?xml version="1.0" encoding="UTF-8"?>\n' +
-            '<CSV><CONNECT>' +
-            this.getLocalCommand() +
-            '</CONNECT><CODE><VALUE>' + key + '</VALUE></CODE></CSV>';
+            '<ESV>' + key + '</ESV>';
     }
 
     abstract getLocalCommand(): string;

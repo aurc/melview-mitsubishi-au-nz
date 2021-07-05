@@ -7,6 +7,15 @@
 
 # Homebridge Melview AU/NZ Airconditioners
 
+[![npm](https://img.shields.io/npm/v/homebridge-airconditioner-mitsubishi-au-nz/latest?label=latest)](https://www.npmjs.com/package/homebridge-airconditioner-mitsubishi-au-nz)
+[![GitHub release](https://img.shields.io/github/release/aurc/melview-mitsubishi-au-nz.svg)](https://github.com/aurc/melview-mitsubishi-au-nz/releases)
+[![npm](https://img.shields.io/npm/dt/homebridge-airconditioner-mitsubishi-au-nz)](https://www.npmjs.com/package/homebridge-airconditioner-mitsubishi-au-nz)
+
+[![Github CI](https://github.com/aurc/melview-mitsubishi-au-nz/actions/workflows/build.yml/badge.svg)](https://github.com/aurc/melview-mitsubishi-au-nz/actions)
+[![Github CD](https://github.com/aurc/melview-mitsubishi-au-nz/actions/workflows/release.yml/badge.svg)](https://github.com/aurc/melview-mitsubishi-au-nz/actions)
+
+[![Hex.pm](https://img.shields.io/hexpm/l/plug)](https://www.apache.org/licenses/LICENSE-2.0)
+
 Use this plugin to integrate your Mitsubishi Airconditioner appliances with Apple's HomeKit using Homebridge.
 
 ## Overview
@@ -26,6 +35,19 @@ Also note that the [Homebridge](https://homebridge.io/) put together excellent d
 documentation which made it possible to get up and running quickly (e.g. 
 [plugin-temeplate](https://github.com/homebridge/homebridge-plugin-template))!
 
+## Compatibility & Pre-requisites
+
+It should work with most of modern Mitsubishi Electric Airconditioner units that are Wi-Fi capable. This plugin has been developed and tested against the following products:
+| Model                                                                                              | Wi-Fi Module                                    |
+| -------------------------------------------------------------------------------------------------- | ----------------------------------------------- | 
+| [MSZ-GL71VGD](https://www.mitsubishielectric.com.au/assets/LEG/JG79A991H01-UM.pdf)                 | [MAC-568IF-E](https://www.mitsubishielectric.com.au/assets/LEG/MAC-568IF-E.pdf)   |
+| [MSZ-GL35VGD](https://www.mitsubishielectric.com.au/assets/LEG/JG79A991H01-UM.pdf)                 | [MAC-568IF-E](https://www.mitsubishielectric.com.au/assets/LEG/MAC-568IF-E.pdf)   |
+| [MSZ-AP25VGD](https://www.mitsubishielectric.com.au/assets/LEG/MSZ-AP-User-Manual-JG79Y333H01.pdf) | [MAC-568IF-E](https://www.mitsubishielectric.com.au/assets/LEG/MAC-568IF-E.pdf)   |
+
+In a nutshell, if you were able to install the **[Wi-Fi Control App](https://apps.apple.com/au/app/mitsubishi-wi-fi-control/id796225889#?platform=iphone)** and operate the unit, this plugin is for you!
+
+Netheless to say, you should have **[Homebridge](https://homebridge.io/)** running.
+
 ## Known Issues
 This plugin relies on Melview cloud service which is notably slow to respond (sometimes up to 60s). 
 This plugin will, for now, suffer of the same issues Alexa and Google Home integrations suffers (in Australia and NZ). If you send a command through HomeKit (via this plugin) or Alexa or Google, it might take up to 60s for the unit to respond.
@@ -33,14 +55,16 @@ This plugin will, for now, suffer of the same issues Alexa and Google Home integ
 ## Installation
 
 ### Through Homebridge Config UI (recommeded)
-It's highly recommended that you use the [Homebridge Config UI X](https://github.com/oznu/homebridge-config-ui-x). Access
-the settings and configure the credentials as per the required fields.
+It's highly recommended that you use the [Homebridge Config UI X](https://github.com/oznu/homebridge-config-ui-x). 
+1. Access the settings and configure the credentials as per the required fields.
+2. Save and restart homebridge.
+3. All units in your network should be automatically recognised. Open your Home App and allocate them to their respective rooms.
 
 ### Through CLI
 
 You can install the package manually by issuing:
 ````
-npm i homebridge-airconditioner-mitsubishi-au-nz
+npm install -g homebridge-airconditioner-mitsubishi-au-nz
 ````
 and configuring the plugin file `config.json` as:
 ````
@@ -60,5 +84,8 @@ and configuring the plugin file `config.json` as:
 ````
 where **user** is your user name, typically the email you used to register with the app 
 and **password** is your account password.
+
+## Questions & Issues
+If you have issues, found a bug or have a question, please open an issue **[here](https://github.com/aurc/melview-mitsubishi-au-nz/issues)**.
 
 

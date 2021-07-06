@@ -44,7 +44,7 @@ export class MelviewService {
         throw new Error('Unable to get auth token from MelView - will retry.');
       }
 
-      const body = await this.debugResponse('login', response);
+      const body = await response.text();
       return JSON.parse(body) as Account;
     }
 
@@ -67,9 +67,8 @@ export class MelviewService {
         method: 'POST',
         headers: this.populateHeaders(),
       });
-      const body = await this.debugResponse('discover', response);
+      const body = await response.text();
       const buildings = JSON.parse(body) as Building[];
-      this.log.debug('Size: ', buildings.length);
       return buildings;
     }
 
@@ -92,7 +91,7 @@ export class MelviewService {
           unitid: unitID,
         }),
       });
-      const body = await this.debugResponse('capabilities', response);
+      const body = await response.text();
       return JSON.parse(body) as Capabilities;
     }
 
@@ -100,8 +99,10 @@ export class MelviewService {
      * Issue a command to the melview platform.
      * @param unitID is the unit identifier
      * @param command is the command to be executed.
+     * @param commandChain any additional commands to be executed in chain.
      */
-    public async command(command: Command) {
+    public async command(command : Command, ...commandChain: Command[]) {
+      const allComms = [command, ...commandChain].map(c => c.execute()).join(',');
       if (this.authWillExpire()) {
         this.login().catch(e => {
           this.log.error(e);
@@ -109,17 +110,19 @@ export class MelviewService {
         });
       }
 
+      const req = JSON.stringify({
+        unitid: command.getUnitID(),
+        v: 2,
+        commands: allComms,
+        lc: 1,
+      });
+      this.log.debug('cmd:', req);
       const response = await fetch(URL + COMMAND_SERVICE, {
         method: 'POST',
         headers: this.populateHeaders(),
-        body: JSON.stringify({
-          unitid: command.getUnitID(),
-          v: 2,
-          commands: command.execute(),
-          lc: 1,
-        }),
+        body: req,
       });
-      const body = await this.debugResponse('command', response);
+      const body = await response.text();
       const rBody = JSON.parse(body) as CommandResponse;
       if (rBody.error === 'ok' && rBody.lc && rBody.lc.length > 0) {
         const xmlBody = command.getLocalCommandBody(rBody.lc);
@@ -155,7 +158,7 @@ export class MelviewService {
           unitid: unitID,
         }),
       });
-      const body = await this.debugResponse('getStatus', response);
+      const body = await response.text();
       return JSON.parse(body) as State;
     }
 
@@ -164,14 +167,14 @@ export class MelviewService {
       this.auth = Cookie.parse(raw) as Cookie;
     }
 
-    private async debugResponse(method: string, response: Response): Promise<string> {
-      this.log.debug(method, 'HEADERS:--------------------------------------\n',
-        JSON.stringify(response.headers.raw()));
-      const body = await response.text();
-      this.log.debug(method, 'BODY:--------------------------------------\n',
-        body);
-      return body;
-    }
+    // private async debugResponse(method: string, response: Response): Promise<string> {
+    //   // this.log.debug(method, 'HEADERS:--------------------------------------\n',
+    //   //   JSON.stringify(response.headers.raw()));
+    //   const body = await response.text();
+    //   // this.log.debug(method, 'BODY:--------------------------------------\n',
+    //   //   body);
+    //   return body;
+    // }
 
     private populateHeaders() {
       return {

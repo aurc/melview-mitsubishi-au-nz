@@ -24,7 +24,7 @@ This plugin allows you to control the basic functionalities of your AC units thr
 - Instant unit response - update the unit directly via LAN interface & cloud Melview.
 - Automatically find all appliances linked to your account;
 - Control power ON/OFF
-- Set mode AUTO, HEAT, COOL
+- Set mode AUTO, HEAT, COOL & Dehumidifier (DRY)
 - Set desired temperature
 - Obtain unit status, e.g. power, mode, room temperature and desired temperature.
 
@@ -52,7 +52,6 @@ Netheless to say, you should have **[Homebridge](https://homebridge.io/)** runni
 
 ## Coming Soon
 Some capabilities are not yet available and should be released soon:
-- Dehumidifier (DRY) mode;
 - Fan (FAN) mode;
 - Swing;
 

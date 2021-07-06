@@ -4,21 +4,18 @@ import {Unit, WorkMode} from './data';
 
 export interface Command {
     execute(): string;
-
     getUnitID(): string;
-
     getLocalCommandURL(): string;
-
     getLocalCommandBody(key: string): string;
 }
 
-export abstract class AbstractCommand implements Command {
+export abstract class AbstractCommand implements Command{
   public constructor(protected value: CharacteristicValue,
-                       protected device: Unit,
-                       protected platform: MelviewMitsubishiHomebridgePlatform) {
+                          protected device: Unit,
+                          protected platform: MelviewMitsubishiHomebridgePlatform) {
   }
 
-    abstract execute(): string;
+    public abstract execute(): string;
 
     public getUnitID(): string {
       return this.device.unitid;
@@ -53,6 +50,17 @@ export class CommandTargetHeaterCoolerState extends AbstractCommand {
       case this.platform.Characteristic.TargetHeaterCoolerState.AUTO:
                 this.device.state!.setmode = WorkMode.AUTO;
         return 'MD' + WorkMode.AUTO;
+    }
+    return '';
+  }
+}
+
+export class CommandTargetHumidifierDehumidifierState extends AbstractCommand {
+  public execute(): string {
+    switch (this.value) {
+      case this.platform.Characteristic.TargetHumidifierDehumidifierState.DEHUMIDIFIER:
+                this.device.state!.setmode = WorkMode.DRY;
+        return 'MD' + WorkMode.DRY;
     }
     return '';
   }

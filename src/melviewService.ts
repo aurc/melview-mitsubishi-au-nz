@@ -116,7 +116,7 @@ export class MelviewService {
         commands: allComms,
         lc: 1,
       });
-      this.log.debug("cmd:", req)
+      this.log.debug('cmd:', req);
       const response = await fetch(URL + COMMAND_SERVICE, {
         method: 'POST',
         headers: this.populateHeaders(),

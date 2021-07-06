@@ -35,12 +35,13 @@ export class MelviewMitsubishiPlatformAccessory {
          * Dehumidifier Capability
          * https://developers.homebridge.io/#/service/HumidifierDehumidifier
          *********************************************************/
-
-        if (device.capabilities?.hasdrymode === 1) {
-          this.dryService = new DryService(this.platform, this.accessory);
-          this.platform.log.info('DRY Capability:', device.room, ' [COMPLETED]');
-        } else {
-          this.platform.log.info('DRY Capability:', device.room, ' [UNAVAILABLE]');
+        if (accessory.context.dry) {
+          if (device.capabilities?.hasdrymode === 1) {
+            this.dryService = new DryService(this.platform, this.accessory);
+            this.platform.log.info('DRY Capability:', device.room, ' [COMPLETED]');
+          } else {
+            this.platform.log.info('DRY Capability:', device.room, ' [UNAVAILABLE]');
+          }
         }
 
 

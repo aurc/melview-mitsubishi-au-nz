@@ -2,7 +2,12 @@ import {MelviewMitsubishiHomebridgePlatform} from "../platform";
 import {CharacteristicValue, PlatformAccessory, Service} from "homebridge";
 import {WorkMode} from "../data";
 import {AbstractService} from "./abstractService";
-import {CommandPower, CommandTargetHeaterCoolerState, CommandTemperature} from "../melviewCommand";
+import {
+    CommandPower,
+    CommandRotationSpeed,
+    CommandTargetHeaterCoolerState,
+    CommandTemperature
+} from "../melviewCommand";
 import {WithUUID} from "hap-nodejs";
 
 export class HeatCoolService extends AbstractService {
@@ -49,19 +54,24 @@ export class HeatCoolService extends AbstractService {
         return this.device.room;
     }
 
+    protected getDeviceName() : string {
+        return this.device.name!;
+    }
+
     async getActive(): Promise<CharacteristicValue> {
         if (this.device.state?.setmode === WorkMode.DRY ||
         this.device.state?.setmode === WorkMode.FAN) {
-            return 0
+            return this.platform.Characteristic.Active.INACTIVE;
         } else {
-            return this.device.state!.power;
+            return this.device.state!.power === 0?
+                this.platform.Characteristic.Active.INACTIVE:
+                this.platform.Characteristic.Active.ACTIVE;
         }
     }
 
     async setActive(value: CharacteristicValue) {
-        this.log.info('Setting', this.getDeviceRoom(), '=', value===0?'OFF':'ON');
         // Default value
-        let v = this.platform.Characteristic.TargetHeaterCoolerState.AUTO;
+        let v = -1;
         switch (this.device.state?.setmode) {
             case WorkMode.HEAT:
                 v = this.platform.Characteristic.TargetHeaterCoolerState.HEAT;
@@ -69,10 +79,16 @@ export class HeatCoolService extends AbstractService {
             case WorkMode.COOL:
                 v = this.platform.Characteristic.TargetHeaterCoolerState.COOL;
                 break;
+            case WorkMode.AUTO:
+                v = this.platform.Characteristic.TargetHeaterCoolerState.AUTO;
+                break;
         }
-        this.platform.melviewService?.command(
-            new CommandPower(value, this.device, this.platform),
-            new CommandTargetHeaterCoolerState(v, this.device, this.platform));
+        if (v !== -1) {
+            this.log.info('Setting', this.getDeviceName(), '=', value===0?'OFF':'ON');
+            this.platform.melviewService?.command(
+                new CommandPower(value, this.device, this.platform),
+                new CommandTargetHeaterCoolerState(v, this.device, this.platform));
+        }
     }
 
     async setCoolingThresholdTemperature(value: CharacteristicValue) {
@@ -188,5 +204,29 @@ export class HeatCoolService extends AbstractService {
 
     async getCurrentTemperature(): Promise<CharacteristicValue> {
         return parseFloat(this.device.state!.roomtemp);
+    }
+
+    async setRotationSpeed(value: CharacteristicValue) {
+        this.platform.log.debug('RotationSpeed ->', value);
+        this.platform.melviewService?.command(
+            new CommandRotationSpeed(value, this.device, this.platform));
+    }
+
+    async getRotationSpeed(): Promise<CharacteristicValue> {
+        const fan = this.device.state!.setfan;
+        switch (fan) {
+            case 1:
+                return 20;
+            case 2:
+                return 40;
+            case 3:
+                return 60;
+            case 5:
+                return 80;
+            case 6:
+                return 100;
+            default:
+                return 20;
+        }
     }
 }

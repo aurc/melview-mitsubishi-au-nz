@@ -1,5 +1,6 @@
 export interface Unit {
     room: string;
+    name?: string;
     unitid: string;
     power: string;
     wifi: string;

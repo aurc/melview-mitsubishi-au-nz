@@ -56,7 +56,8 @@ Some capabilities are not yet available and should be released soon:
 - Swing;
 
 ## Known issues
-LAN access still requires internet connection, as it authenticates the requests with Melview cloud. It still
+- **Dry mode**: Does not control fan speed.
+- **LAN access**: Still requires internet connection, as it authenticates the requests with Melview cloud. It still
 operates way faster than Alexa and Goolge home integration as it has a fast follower command locally removing
 the know lag.
 

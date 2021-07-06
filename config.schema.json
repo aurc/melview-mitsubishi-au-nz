@@ -17,6 +17,12 @@
         "type": "string",
         "required": true,
         "description": "Password used on your Mitsubishi Wi-Fi Control app"
+      },
+      "dry": {
+        "title": "Enable Dry Mode (experimental)",
+        "type": "boolean",
+        "default": false,
+        "description": "Dry mode is still in development and is subject to bugs."
       }
     }
   }

@@ -115,7 +115,7 @@ export class MelviewService {
         body: JSON.stringify({
           unitid: command.getUnitID(),
           v: 2,
-          commands: command.execute(),
+          commands: command.executeAll(),
           lc: 1,
         }),
       });
@@ -165,11 +165,11 @@ export class MelviewService {
     }
 
     private async debugResponse(method: string, response: Response): Promise<string> {
-      this.log.debug(method, 'HEADERS:--------------------------------------\n',
-        JSON.stringify(response.headers.raw()));
+      // this.log.debug(method, 'HEADERS:--------------------------------------\n',
+      //   JSON.stringify(response.headers.raw()));
       const body = await response.text();
-      this.log.debug(method, 'BODY:--------------------------------------\n',
-        body);
+      // this.log.debug(method, 'BODY:--------------------------------------\n',
+      //   body);
       return body;
     }
 

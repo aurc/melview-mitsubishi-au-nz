@@ -120,7 +120,6 @@ export class MelviewMitsubishiHomebridgePlatform implements DynamicPlatformPlugi
         }
       }
     }
-
 }
 
 

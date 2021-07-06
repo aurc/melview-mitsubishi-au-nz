@@ -2,44 +2,20 @@ import {CharacteristicValue} from 'homebridge';
 import {MelviewMitsubishiHomebridgePlatform} from './platform';
 import {Unit, WorkMode} from './data';
 
+export interface Command {
+    execute(): string;
+    getUnitID(): string;
+    getLocalCommandURL(): string;
+    getLocalCommandBody(key: string): string;
+}
 
-export abstract class Command {
-    protected constructor(protected value: CharacteristicValue,
+export abstract class AbstractCommand  implements Command{
+    public constructor(protected value: CharacteristicValue,
                           protected device: Unit,
                           protected platform: MelviewMitsubishiHomebridgePlatform) {
     }
 
-    protected _next?: Command;
-    protected _prev?: Command;
-    protected _first?: Command;
-
-    public add<T extends Command>(value: CharacteristicValue,
-                                  cType: new (value: CharacteristicValue,
-                                          device: Unit,
-                                          platform: MelviewMitsubishiHomebridgePlatform) => (T)): Command {
-        const c = new cType(value, this.device, this.platform);
-        this._next = new cType(value, this.device, this.platform);
-        c._prev = this;
-        if (!this._prev) {
-            c._first = this;
-            this._first = this;
-        } else {
-            c._first = this._first;
-        }
-        return c;
-    }
-
-    public executeAll(): string {
-        const cmds = [this._first]
-        let c = this._next
-        while (c) {
-            cmds.push(c);
-            c = c._next;
-        }
-        return cmds.join(',');
-    }
-
-    abstract execute(): string;
+    public abstract execute(): string;
 
     public getUnitID(): string {
         return this.device.unitid;
@@ -55,26 +31,14 @@ export abstract class Command {
     }
 }
 
-export class CommandPower extends Command {
-    constructor(protected value: CharacteristicValue,
-                protected device: Unit,
-                protected platform: MelviewMitsubishiHomebridgePlatform) {
-        super(value, device, platform);
-    }
-
+export class CommandPower extends AbstractCommand {
     public execute(): string {
         this.device.state!.power = this.value as number;
         return 'PW' + this.value;
     }
 }
 
-export class CommandTargetHeaterCoolerState extends Command {
-    constructor(protected value: CharacteristicValue,
-                protected device: Unit,
-                protected platform: MelviewMitsubishiHomebridgePlatform) {
-        super(value, device, platform);
-    }
-
+export class CommandTargetHeaterCoolerState extends AbstractCommand {
     public execute(): string {
         switch (this.value) {
             case this.platform.Characteristic.TargetHeaterCoolerState.COOL:
@@ -91,13 +55,7 @@ export class CommandTargetHeaterCoolerState extends Command {
     }
 }
 
-export class CommandTargetHumidifierDehumidifierState extends Command {
-    constructor(protected value: CharacteristicValue,
-                protected device: Unit,
-                protected platform: MelviewMitsubishiHomebridgePlatform) {
-        super(value, device, platform);
-    }
-
+export class CommandTargetHumidifierDehumidifierState extends AbstractCommand {
     public execute(): string {
         switch (this.value) {
             case this.platform.Characteristic.TargetHumidifierDehumidifierState.DEHUMIDIFIER:
@@ -108,13 +66,7 @@ export class CommandTargetHumidifierDehumidifierState extends Command {
     }
 }
 
-export class CommandRotationSpeed extends Command {
-    constructor(protected value: CharacteristicValue,
-                protected device: Unit,
-                protected platform: MelviewMitsubishiHomebridgePlatform) {
-        super(value, device, platform);
-    }
-
+export class CommandRotationSpeed extends AbstractCommand {
     public execute(): string {
         if (this.value === 0) {
             this.device.state!.setfan = 0;
@@ -133,13 +85,7 @@ export class CommandRotationSpeed extends Command {
     }
 }
 
-export class CommandTemperature extends Command {
-    constructor(protected value: CharacteristicValue,
-                protected device: Unit,
-                protected platform: MelviewMitsubishiHomebridgePlatform) {
-        super(value, device, platform);
-    }
-
+export class CommandTemperature extends AbstractCommand {
     public execute(): string {
         this.device.state!.settemp = this.value as string;
         return 'TS' + this.device.state!.setfan;

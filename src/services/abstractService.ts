@@ -12,6 +12,7 @@ export abstract class AbstractService {
         protected readonly accessory: PlatformAccessory
     ) {
         this.device = accessory.context.device;
+        this.log.info("Set Device:", this.device.room)
         this.service = this.accessory.getService(this.getServiceType()) ||
             this.accessory.addService(this.getServiceType());
         this.service.setCharacteristic(this.platform.Characteristic.Name, this.getDeviceRoom());

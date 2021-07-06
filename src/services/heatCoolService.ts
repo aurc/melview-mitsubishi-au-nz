@@ -28,7 +28,6 @@ export class HeatCoolService extends AbstractService {
             .onSet(this.setCoolingThresholdTemperature.bind(this))
             .onGet(this.getCoolingThresholdTemperature.bind(this));;
         const cool = this.device.state!.max![WorkMode.COOL + ''];
-        this.log.info(this.device.room, "CoolingThresholdTemperature", cool);
         this.service.getCharacteristic(this.characterisitc.CoolingThresholdTemperature).props.minValue = cool.min;
         this.service.getCharacteristic(this.characterisitc.CoolingThresholdTemperature).props.maxValue = cool.max;
         this.service.getCharacteristic(this.characterisitc.CoolingThresholdTemperature).props.minStep = 0.5;
@@ -37,7 +36,6 @@ export class HeatCoolService extends AbstractService {
             .onSet(this.setHeatingThresholdTemperature.bind(this))
             .onGet(this.getHeatingThresholdTemperature.bind(this));;
         const heat = this.device.state!.max![WorkMode.HEAT + ''];
-        this.log.info(this.device.room, "HeatingThresholdTemperature", heat);
         this.service.getCharacteristic(this.characterisitc.HeatingThresholdTemperature).props.minValue = heat.min;
         this.service.getCharacteristic(this.characterisitc.HeatingThresholdTemperature).props.maxValue = heat.max;
         this.service.getCharacteristic(this.characterisitc.HeatingThresholdTemperature).props.minStep = 0.5;
@@ -61,19 +59,20 @@ export class HeatCoolService extends AbstractService {
     }
 
     async setActive(value: CharacteristicValue) {
-        this.log.info('Set ', this.device.room, '=', value===0?'OFF':'ON');
+        this.log.info('Setting', this.getDeviceRoom(), '=', value===0?'OFF':'ON');
         // Default value
-        let v = WorkMode.AUTO;
+        let v = this.platform.Characteristic.TargetHeaterCoolerState.AUTO;
         switch (this.device.state?.setmode) {
             case WorkMode.HEAT:
-                v = WorkMode.HEAT;
+                v = this.platform.Characteristic.TargetHeaterCoolerState.HEAT;
                 break;
             case WorkMode.COOL:
-                v = WorkMode.COOL;
+                v = this.platform.Characteristic.TargetHeaterCoolerState.COOL;
                 break;
         }
         this.platform.melviewService?.command(
-            new CommandPower(value, this.device, this.platform).add(v,CommandTargetHeaterCoolerState));
+            new CommandPower(value, this.device, this.platform),
+            new CommandTargetHeaterCoolerState(v, this.device, this.platform));
     }
 
     async setCoolingThresholdTemperature(value: CharacteristicValue) {
@@ -135,14 +134,14 @@ export class HeatCoolService extends AbstractService {
         const targTemp = parseFloat(this.device.state!.settemp);
         switch (mode) {
             case WorkMode.COOL:
-                this.platform.log.debug('getCurrentHeaterCoolerState: COOLING');
+                //this.platform.log.debug('getCurrentHeaterCoolerState: COOLING');
                 return c.CurrentHeaterCoolerState.COOLING;
             case WorkMode.DRY:
             case WorkMode.FAN:
-                this.platform.log.debug('getCurrentHeaterCoolerState: IDLE');
+                //this.platform.log.debug('getCurrentHeaterCoolerState: IDLE');
                 return c.CurrentHeaterCoolerState.IDLE;
             case WorkMode.HEAT:
-                this.platform.log.debug('getCurrentHeaterCoolerState: HEATING');
+                //this.platform.log.debug('getCurrentHeaterCoolerState: HEATING');
                 return c.CurrentHeaterCoolerState.HEATING;
             case WorkMode.AUTO:
                 if (roomTemp < targTemp) {
@@ -168,7 +167,7 @@ export class HeatCoolService extends AbstractService {
     }
 
     async setTargetHeaterCoolerState(value: CharacteristicValue) {
-        this.platform.log.debug('setTargetHeaterCoolerState ->', value);
+        //this.platform.log.debug('setTargetHeaterCoolerState ->', value);
         this.platform.melviewService?.command(
             new CommandTargetHeaterCoolerState(value, this.device, this.platform));
     }
@@ -178,13 +177,10 @@ export class HeatCoolService extends AbstractService {
         const c = this.platform.api.hap.Characteristic;
         switch (mode) {
             case WorkMode.HEAT:
-                this.platform.log.debug('getTargetHeaterCoolerState: HEAT');
                 return c.TargetHeaterCoolerState.HEAT;
             case WorkMode.COOL: /*case WorkMode.FAN: case WorkMode.DRY:*/
-                this.platform.log.debug('getTargetHeaterCoolerState: COOL');
                 return c.TargetHeaterCoolerState.COOL;
             case WorkMode.AUTO:
-                this.platform.log.debug('getTargetHeaterCoolerState: AUTO');
                 return c.TargetHeaterCoolerState.AUTO;
         }
         return c.TargetHeaterCoolerState.AUTO;

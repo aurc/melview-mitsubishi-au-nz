@@ -39,9 +39,13 @@ export class DryService extends AbstractService {
     }
 
     async setActive(value: CharacteristicValue) {
-        this.log.info('Set ', this.device.room, '=', value===0?'OFF':'ON');
+        this.log.info('Setting', this.getDeviceRoom(), '=', value===0?'OFF':'ON');
         this.platform.melviewService?.command(
-            new CommandPower(value, this.device, this.platform).add(WorkMode.DRY,CommandTargetHeaterCoolerState));
+            new CommandPower(value, this.device, this.platform),
+            new CommandTargetHumidifierDehumidifierState(
+                this.platform.Characteristic.TargetHumidifierDehumidifierState.DEHUMIDIFIER,
+                this.device,
+                this.platform));
     }
 
     protected getServiceType<T extends WithUUID<typeof Service>>() : T {

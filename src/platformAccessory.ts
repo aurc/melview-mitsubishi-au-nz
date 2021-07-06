@@ -21,7 +21,8 @@ export class MelviewMitsubishiPlatformAccessory {
         // set accessory information
         this.accessory.getService(this.platform.Service.AccessoryInformation)!
           .setCharacteristic(this.platform.Characteristic.Manufacturer, 'Mitsubishi Electric')
-          .setCharacteristic(this.platform.Characteristic.Model, device.capabilities!.adaptortype);
+          .setCharacteristic(this.platform.Characteristic.Model, device.capabilities!.adaptortype)
+          .setCharacteristic(this.platform.Characteristic.SerialNumber, device.unitid);
 
         /*********************************************************
          * HEATER & Cooler Capability
@@ -51,8 +52,8 @@ export class MelviewMitsubishiPlatformAccessory {
           this.platform.melviewService?.getStatus(
             this.accessory.context.device.unitid)
             .then(s => {
-              this.platform.log.debug('Updating Accessory State:',
-                this.accessory.context.device.unitid);
+              // this.platform.log.debug('Updating Accessory State:',
+              //   this.accessory.context.device.unitid);
               this.accessory.context.device.state = s;
             });
         }, 5000);

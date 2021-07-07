@@ -88,6 +88,6 @@ export class CommandRotationSpeed extends AbstractCommand {
 export class CommandTemperature extends AbstractCommand {
   public execute(): string {
         this.device.state!.settemp = this.value as string;
-        return 'TS' + this.device.state!.setfan;
+        return 'TS' + this.device.state!.settemp;
   }
 }

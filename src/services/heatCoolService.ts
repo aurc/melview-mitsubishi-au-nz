@@ -39,7 +39,7 @@ export class HeatCoolService extends AbstractService {
 
         this.service.getCharacteristic(this.platform.Characteristic.HeatingThresholdTemperature)
             .onSet(this.setHeatingThresholdTemperature.bind(this))
-            .onGet(this.getHeatingThresholdTemperature.bind(this));;
+            .onGet(this.getHeatingThresholdTemperature.bind(this));
         const heat = this.device.state!.max![WorkMode.HEAT + ''];
         this.service.getCharacteristic(this.characterisitc.HeatingThresholdTemperature).props.minValue = heat.min;
         this.service.getCharacteristic(this.characterisitc.HeatingThresholdTemperature).props.maxValue = heat.max;
@@ -92,6 +92,7 @@ export class HeatCoolService extends AbstractService {
     }
 
     async setCoolingThresholdTemperature(value: CharacteristicValue) {
+        this.platform.log.debug('setCoolingThresholdTemperature ->', value);
         const minVal = this.service.getCharacteristic(this.characterisitc.CoolingThresholdTemperature).props.minValue!;
         const maxVal = this.service.getCharacteristic(this.characterisitc.CoolingThresholdTemperature).props.maxValue!;
         if (value! < minVal) {
@@ -118,6 +119,7 @@ export class HeatCoolService extends AbstractService {
     }
 
     async setHeatingThresholdTemperature(value: CharacteristicValue) {
+        this.platform.log.debug('setHeatingThresholdTemperature:', value);
         const minVal = this.service.getCharacteristic(this.characterisitc.HeatingThresholdTemperature).props.minValue!;
         const maxVal = this.service.getCharacteristic(this.characterisitc.HeatingThresholdTemperature).props.maxValue!;
         if (value! < minVal) {
@@ -127,6 +129,7 @@ export class HeatCoolService extends AbstractService {
             this.platform.log.warn('setHeatingThresholdTemperature ->', value, 'is illegal - updating to', maxVal);
             value = maxVal;
         }
+
         this.platform.melviewService?.command(
             new CommandTemperature(value, this.device, this.platform));
     }
@@ -183,7 +186,7 @@ export class HeatCoolService extends AbstractService {
     }
 
     async setTargetHeaterCoolerState(value: CharacteristicValue) {
-        //this.platform.log.debug('setTargetHeaterCoolerState ->', value);
+        this.platform.log.debug('setTargetHeaterCoolerState ->', value);
         this.platform.melviewService?.command(
             new CommandTargetHeaterCoolerState(value, this.device, this.platform));
     }

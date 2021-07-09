@@ -24,7 +24,9 @@ This plugin allows you to control the basic functionalities of your AC units thr
 - Instant unit response - update the unit directly via LAN interface & cloud Melview.
 - Automatically find all appliances linked to your account;
 - Control power ON/OFF
-- Set mode AUTO, HEAT, COOL & Dehumidifier (DRY)
+- Set mode AUTO, HEAT, COOL
+- Dehumidifier (DRY): **Experimental**, disabled by default, use with caution as 
+  this feature is not extensively tested.
 - Set desired temperature
 - Obtain unit status, e.g. power, mode, room temperature and desired temperature.
 

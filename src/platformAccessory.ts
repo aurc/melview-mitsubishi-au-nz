@@ -56,6 +56,10 @@ export class MelviewMitsubishiPlatformAccessory {
               // this.platform.log.debug('Updating Accessory State:',
               //   this.accessory.context.device.unitid);
               this.accessory.context.device.state = s;
+            })
+            .catch(e => {
+              this.platform.log.error('Unable to find accessory status. Check the network');
+              this.platform.log.debug(e);
             });
         }, 5000);
     }

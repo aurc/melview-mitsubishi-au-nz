@@ -39,7 +39,16 @@ export class MelviewService {
         }),
       });
 
-      this.extractCookie(response);
+      if (!response || response.status !== 200) {
+        throw new Error ('Failed to login - check the network.');
+      }
+
+      try {
+        this.extractCookie(response);
+      } catch (e) {
+        this.log.debug(e);
+        throw new Error ('Failed parse response from Melview - check the network.');
+      }
       if (!this.auth) {
         throw new Error('Unable to get auth token from MelView - will retry.');
       }

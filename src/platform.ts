@@ -65,59 +65,65 @@ export class MelviewMitsubishiHomebridgePlatform implements DynamicPlatformPlugi
      * must not be registered again to prevent "duplicate UUID" errors.
      */
     async discoverDevices() {
-      await this.melviewService!.login();
-      const r = await this.melviewService!.discover();
-      if (!r) {
-        return;
-      }
-      for (let j = 0; j < r.length; j++) {
-        const b = r[j];
-        this.log.info('Discovered Building [', b.buildingid, '] = \'', b.building,
-          '\' with', b.units.length, 'units!');
-        for (let i = 0; i < b.units.length; i++) {
-          const device = b.units[i];
+      try {
 
-          const uuid = this.api.hap.uuid.generate(device.unitid);
-          this.log.debug('IDS:', device.unitid, uuid);
-          const existingAccessory = this.accessories.find(accessory => accessory.UUID === uuid);
+        await this.melviewService!.login();
+        const r = await this.melviewService!.discover();
+        if (!r) {
+          return;
+        }
+        for (let j = 0; j < r.length; j++) {
+          const b = r[j];
+          this.log.info('Discovered Building [', b.buildingid, '] = \'', b.building,
+            '\' with', b.units.length, 'units!');
+          for (let i = 0; i < b.units.length; i++) {
+            const device = b.units[i];
 
-          if (existingAccessory) {
-            // the accessory already exists
-            this.log.info('Restoring existing accessory from cache:', existingAccessory.displayName);
+            const uuid = this.api.hap.uuid.generate(device.unitid);
+            this.log.debug('IDS:', device.unitid, uuid);
+            const existingAccessory = this.accessories.find(accessory => accessory.UUID === uuid);
 
-            const s = await this.melviewService!.getStatus(device.unitid);
-            existingAccessory.context.device.state = s;
-            new MelviewMitsubishiPlatformAccessory(this, existingAccessory);
+            if (existingAccessory) {
+              // the accessory already exists
+              this.log.info('Restoring existing accessory from cache:', existingAccessory.displayName);
 
-            // it is possible to remove platform accessories at any time using `api.unregisterPlatformAccessories`, eg.:
-            // remove platform accessories when no longer present
-            // this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [existingAccessory]);
-            // this.log.info('Removing existing accessory from cache:', existingAccessory.displayName);
-          } else {
-            // the accessory does not yet exist, so we need to create it
-            this.log.info('Adding new accessory:', device.room, '[', device.unitid, ']:', uuid);
+              const s = await this.melviewService!.getStatus(device.unitid);
+              existingAccessory.context.device.state = s;
+              new MelviewMitsubishiPlatformAccessory(this, existingAccessory);
 
-            const c = await this.melviewService!.capabilities(device.unitid);
-            const s = await this.melviewService!.getStatus(device.unitid);
+              // it is possible to remove platform accessories at any time using `api.unregisterPlatformAccessories`, eg.:
+              // remove platform accessories when no longer present
+              // this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [existingAccessory]);
+              // this.log.info('Removing existing accessory from cache:', existingAccessory.displayName);
+            } else {
+              // the accessory does not yet exist, so we need to create it
+              this.log.info('Adding new accessory:', device.room, '[', device.unitid, ']:', uuid);
 
-            device.capabilities = c;
-            device.state = s;
-            // create a new accessory
-            //this.api.registerPlatformAccessories()
-            const accessory = new this.api.platformAccessory(device.room, uuid, Categories.AIR_CONDITIONER);
+              const c = await this.melviewService!.capabilities(device.unitid);
+              const s = await this.melviewService!.getStatus(device.unitid);
 
-            // store a copy of the device object in the `accessory.context`
-            // the `context` property can be used to store any data about the accessory you may need
-            accessory.context.device = device;
+              device.capabilities = c;
+              device.state = s;
+              // create a new accessory
+              //this.api.registerPlatformAccessories()
+              const accessory = new this.api.platformAccessory(device.room, uuid, Categories.AIR_CONDITIONER);
 
-            // create the accessory handler for the newly create accessory
-            // this is imported from `platformAccessory.ts`
-            new MelviewMitsubishiPlatformAccessory(this, accessory);
+              // store a copy of the device object in the `accessory.context`
+              // the `context` property can be used to store any data about the accessory you may need
+              accessory.context.device = device;
 
-            // link the accessory to your platform
-            this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
+              // create the accessory handler for the newly create accessory
+              // this is imported from `platformAccessory.ts`
+              new MelviewMitsubishiPlatformAccessory(this, accessory);
+
+              // link the accessory to your platform
+              this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
+            }
           }
         }
+      } catch(e) {
+        this.log.error('Failed to process platform discovery. Fix the problem and restart the service.');
+        this.log.debug(e);
       }
     }
 }

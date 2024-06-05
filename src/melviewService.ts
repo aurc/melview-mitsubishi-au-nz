@@ -49,8 +49,8 @@ export class MelviewService {
         this.log.debug(e);
         throw new Error ('Failed parse response from Melview - check the network.');
       }
-      if (!this.auth) {
-        throw new Error('Unable to get auth token from MelView - will retry.');
+      if (!this.auth?.value) {
+        throw new Error('Unable to get auth token from MelView. You may need to reset your password with Mitsubishi');
       }
 
       const body = await response.text();
